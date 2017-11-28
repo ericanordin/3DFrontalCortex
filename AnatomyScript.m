@@ -71,7 +71,7 @@ PlotImgStack(flipdim(Skin,2), [0.5, 0.5, .5]);
   lightangle(80, 20);
   lightangle(45, 0);
 view(-90, 0);
- axis vis3d tight
+ axis vis3d tight %Reduce to size of image and freeze aspect ratio
 	
 PlotCoords(Electrodes_Right(:, 1),Electrodes_Right(:, 2), Electrodes_Right(:, 3)', 'k.'); 
 PlotCoords(Electrodes_Left(:, 1), Electrodes_Left(:, 2), Electrodes_Left(:, 3)', 'k.'); 

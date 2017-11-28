@@ -3,12 +3,17 @@ function [] = PlotImgStack(img, face_color);
 %%% BUILD SURFACE
 % load img
 img(img>0) = 1; % thresholds image, since otherwise GIF indexed
+%All pixels are either 1 or 0
+
 img = smooth3(img, 'box', [5 5 7]);
 img = permute(img, [2 3 1]); % realign dimensions so that ap/ml/dv
 img = flipdim(img,3);
 % img = flipdim(img,2); % flip left/right
 h_iso = patch(isosurface(img, 0.5));
 isonormals(img, h_iso); % effect only really noticeable on zoom
+%Sets VertexNormals property of img to those calculated by h_iso, which
+%determines the shape and orientation of vertex patch
+
 h_cap = patch(isocaps(img, 0.5, 'below'));
 
 
