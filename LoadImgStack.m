@@ -8,7 +8,7 @@ function [img] = LoadImgStack(dir_stack);
 % height = 500;
 %  crop_rows = [top:top+height];
 %  crop_cols = [center:center+width];
-dec = 9;
+dec = 9; %Decimation factor: taking every 9th pixel
 
   crop_rows = [1:830];
   crop_cols = [1:1090];
