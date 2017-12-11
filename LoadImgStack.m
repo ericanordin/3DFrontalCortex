@@ -32,7 +32,7 @@ for i_file = 1:num_files
    %image(temp_img);
    grayImg = rgb2gray(temp_img);
    %grayColormap = rgb2gray(temp_map);
-   image(grayImg);
+   %image(grayImg);
    colormap('gray');
    
    
@@ -50,12 +50,15 @@ for i_file = 1:num_files
        tempImg = grayImg; %Matches size
        tempImg(:,:) = mode(mode(grayImg)); %Sets all of tempImg to background color for grayImg
        
+       %if i_file == 7
+        %   disp('stop');
+       %end
        if yStart > 0 %Shift image down
             tempImg(pixelShift+1:end, :) = grayImg(1:end-pixelShift, :);
        else %Shift image up
            tempImg(1:end-pixelShift, :) = grayImg(pixelShift+1:end, :);
        end
-       image(tempImg);
+       %image(tempImg);
        grayImg = tempImg;
    end
    
@@ -75,11 +78,13 @@ for i_file = 1:num_files
 %    subplot(3, 1, 3);
 %    imagesc(dec_img);
 %    axis image;
-   img(:,:,i_file) = dec_img;
-   if i_file == 1
-       fullMatrixSize = zeros(size(img,1), size(img,2), num_files);
-       fullMatrixSize(:,:,1) = img(:,:,1);
+   
+   if i_file == 1 %Pre-allocates matrix size once image size has been established
+       fullMatrixSize = zeros(size(dec_img,1), size(dec_img,2), num_files);
+       fullMatrixSize(:,:,1) = dec_img;
        img = fullMatrixSize;
+   else
+       img(:,:,i_file) = dec_img;
    end
    
    %image(img(:,:,i_file));
