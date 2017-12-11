@@ -59,13 +59,16 @@ ILcolor = [0.8 0.5 0.5]; %pink
 CG1color = [0.5 0.8 0.5]; %green
 
 masterImageDir = 'Paxinos & Watson\';
+yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J61'); 
+%Indicates where the scale on the image starts so that slices are lined up
+%properly
 
 %PL = LoadImgStack('PL\');
 %Skin = LoadImgStack('CortexSkin\');
-PL = LoadImgStack(strcat(masterImageDir, 'PL\'));
-Skin = LoadImgStack(strcat(masterImageDir, 'Cortex\'));
-IL = LoadImgStack(strcat(masterImageDir, 'IL\'));
-CG1 = LoadImgStack(strcat(masterImageDir, 'CG1\'));
+PL = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
+Skin = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
+IL = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
+CG1 = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
 
 PlotImgStack(PL, PLcolor);
 PlotImgStack(flipdim(PL,2), PLcolor);

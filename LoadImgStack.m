@@ -1,4 +1,4 @@
-function [img] = LoadImgStack(dir_stack); 
+function [img] = LoadImgStack(dir_stack, shiftArray) 
 
 %%% EXTRACT AND SAVE IMAGE STACK
 % Preprocessing parameters
@@ -9,6 +9,7 @@ function [img] = LoadImgStack(dir_stack);
 %  crop_rows = [top:top+height];
 %  crop_cols = [center:center+width];
 dec = 9; %Decimation factor: taking every 9th pixel
+imageHeight = 16.5; %mm. Matches scale
 
   %crop_rows = [1:830];
   %crop_cols = [1:1090];
@@ -25,12 +26,39 @@ fprintf('\n%s: ', char(dir_stack));
 for i_file = 1:num_files
    fprintf(' %d', i_file); 
    filename = files(i_file).name;
-   [temp_img, temp_map] = imread(filename);
+   [temp_img, ~] = imread(filename);
+   
+   
    %image(temp_img);
    grayImg = rgb2gray(temp_img);
    %grayColormap = rgb2gray(temp_map);
-   %image(grayImg);
+   image(grayImg);
    colormap('gray');
+   
+   
+   [~, nameNoExt, ~] = fileparts(filename);
+   sliceNum = str2double(nameNoExt(end-2:end)); 
+   %Assumes 3-digit designation at end of file
+   
+   yStart = shiftArray(sliceNum);
+   if yStart ~= 0
+       pixelUnitRatio = round(size(grayImg, 1)/imageHeight); %y-axis
+       
+       %Shift by appropriate number of pixels corresponding to yStart
+       pixelShift = abs(round(pixelUnitRatio*yStart));
+       
+       tempImg = grayImg; %Matches size
+       tempImg(:,:) = mode(mode(grayImg)); %Sets all of tempImg to background color for grayImg
+       
+       if yStart > 0 %Shift image down
+            tempImg(pixelShift+1:end, :) = grayImg(1:end-pixelShift, :);
+       else %Shift image up
+           tempImg(1:end-pixelShift, :) = grayImg(pixelShift+1:end, :);
+       end
+       image(tempImg);
+       grayImg = tempImg;
+   end
+   
    
    %crop_img = grayImg(crop_rows, crop_cols);
    %dec_img = crop_img(1:dec:end, 1:dec:end);

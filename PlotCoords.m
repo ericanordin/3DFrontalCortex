@@ -1,4 +1,4 @@
-function [] = PlotCoords(AP, ML, DV, Marker); 
+function [] = PlotCoords(AP, ML, DV, Marker) 
 
 %Determine mm/pixel by saving image with grid and counting pixels in
 %photoshop

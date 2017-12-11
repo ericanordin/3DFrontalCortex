@@ -1,4 +1,4 @@
-function [] = PlotImgStack(img, face_color); 
+function [] = PlotImgStack(img, face_color)
 
 %%% BUILD SURFACE
 % load img
