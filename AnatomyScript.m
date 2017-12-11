@@ -12,6 +12,8 @@ clf
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%Coordinates of electrode arrays estimated from
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%histology
+
+%{
 Electrodes_Right = [
     1.8494    0.1175   -3.4000
     1.8787    0.3387   -3.4000
@@ -49,18 +51,33 @@ Electrodes_Left = [
     2.8933   -0.2558   -3.7000
     2.9518   -0.0760   -3.7000
 ];
+%}
 
+PLcolor = [0.5, 0.5, 0.8]; %purple
+Skincolor = [0.5, 0.5, 0.5]; %gray
+ILcolor = [0.8 0.5 0.5]; %pink
+CG1color = [0.5 0.8 0.5]; %green
 
+masterImageDir = 'Paxinos & Watson\';
 
+%PL = LoadImgStack('PL\');
+%Skin = LoadImgStack('CortexSkin\');
+PL = LoadImgStack(strcat(masterImageDir, 'PL\'));
+Skin = LoadImgStack(strcat(masterImageDir, 'Cortex\'));
+IL = LoadImgStack(strcat(masterImageDir, 'IL\'));
+CG1 = LoadImgStack(strcat(masterImageDir, 'CG1\'));
 
-PL = LoadImgStack('PL\');
-Skin = LoadImgStack('CortexSkin\');
+PlotImgStack(PL, PLcolor);
+PlotImgStack(flipdim(PL,2), PLcolor);
 
-PlotImgStack(PL, [0.5, 0.5, .8]);
-PlotImgStack(flipdim(PL,2), [0.5, 0.5, .8]);
+PlotImgStack(Skin, Skincolor);
+PlotImgStack(flipdim(Skin,2), Skincolor);
 
-PlotImgStack(Skin, [0.5, 0.5, .5]);
-PlotImgStack(flipdim(Skin,2), [0.5, 0.5, .5]);
+PlotImgStack(IL, ILcolor);
+PlotImgStack(flipdim(IL,2), ILcolor);
+
+PlotImgStack(CG1, CG1color);
+PlotImgStack(flipdim(CG1,2), CG1color);
 
 
 
@@ -75,9 +92,10 @@ view(-90, 0);
  %Matlab's default setting seems to allow the tick marks to set the
  %spacing, giving the aspect ratio (see PlotImgStack)
  
+ %{
 PlotCoords(Electrodes_Right(:, 1),Electrodes_Right(:, 2), Electrodes_Right(:, 3)', 'k.'); 
 PlotCoords(Electrodes_Left(:, 1), Electrodes_Left(:, 2), Electrodes_Left(:, 3)', 'k.'); 
-
+%}
 
 
 set(gcf, 'Color', [1 1 1])
