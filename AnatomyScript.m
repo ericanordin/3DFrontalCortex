@@ -63,9 +63,8 @@ yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J61');
 %Indicates where the scale on the image starts so that slices are lined up
 %properly
 
-%PL = LoadImgStack('PL\');
-%Skin = LoadImgStack('CortexSkin\');
 [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
+%PlotImgStack(PLslices, PLcolor);
 [SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
 [ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
 [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);

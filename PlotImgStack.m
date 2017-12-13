@@ -6,8 +6,12 @@ function PlotImgStack(img, face_color)
 img(img>0) = 1; % thresholds image, since otherwise GIF indexed (not binary)
 %All pixels are either 1 or 0
 
+
 img = smooth3(img, 'box', [5 5 7]);
 img = permute(img, [2 3 1]); % realign dimensions so that ap/ml/dv
+%x = slice y (467 pixels)
+%y = image number (equal to number of slices)
+%z = slice x (434 pixels)
 img = flipdim(img,3); %Flips up/down
 % img = flipdim(img,2); % flip left/right
 h_iso = patch(isosurface(img, 0.5));
