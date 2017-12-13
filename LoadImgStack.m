@@ -1,25 +1,23 @@
-function [img] = LoadImgStack(dir_stack, shiftArray) 
+function [img, allNum] = LoadImgStack(dir_stack, shiftArray) 
 
 %%% EXTRACT AND SAVE IMAGE STACK
-% Preprocessing parameters
-% center = 512;
-% width = 500; % equals 6mm from middle (32 ppmm)
-% top = 200; % 6mm again
-% height = 500;
-%  crop_rows = [top:top+height];
-%  crop_cols = [center:center+width];
-dec = 9; %Decimation factor: taking every 9th pixel
-imageHeight = 16.5; %mm. Matches scale
 
-  %crop_rows = [1:830];
-  %crop_cols = [1:1090];
+%Input
+%dir_stack: the subfolder containing the images for the brain region
+%shiftArray: expresses adjustments that need to be made to line the images
+%up properly
+
+%Output
+%img: matrix of slice data
+%allNum: numbering of slice corresponding to img
+
+dec = 9; %Decimation factor: taking every 9th pixel
+imageHeight = 16.5; %mm. Matches P&W scale
 
 cwd = pwd; 
 cd(dir_stack);
-%files = dir('*.gif');
 files = dir('*.tif');
 num_files = length(files);
-%img = zeros(1,1,num_files);
 
 fprintf('\n%s: ', char(dir_stack));
 
@@ -29,11 +27,8 @@ for i_file = 1:num_files
    [temp_img, ~] = imread(filename);
    
    
-   %image(temp_img);
    grayImg = rgb2gray(temp_img);
-   %grayColormap = rgb2gray(temp_map);
-   %image(grayImg);
-   colormap('gray');
+   colormap('gray'); %Black/white displayed as yellow/blue otherwise
    
    
    [~, nameNoExt, ~] = fileparts(filename);
@@ -50,44 +45,29 @@ for i_file = 1:num_files
        tempImg = grayImg; %Matches size
        tempImg(:,:) = mode(mode(grayImg)); %Sets all of tempImg to background color for grayImg
        
-       %if i_file == 7
-        %   disp('stop');
-       %end
        if yStart > 0 %Shift image down
             tempImg(pixelShift+1:end, :) = grayImg(1:end-pixelShift, :);
        else %Shift image up
            tempImg(1:end-pixelShift, :) = grayImg(pixelShift+1:end, :);
        end
-       %image(tempImg);
+
        grayImg = tempImg;
    end
    
-   
-   %crop_img = grayImg(crop_rows, crop_cols);
-   %dec_img = crop_img(1:dec:end, 1:dec:end);
-   
    dec_img = grayImg(1:dec:end, 1:dec:end);
-   
-   %image(dec_img);
-%    subplot(3, 1, 1);
-%    imagesc(temp_img);
-%    axis image;
-%    subplot(3, 1, 2);
-%    imagesc(crop_img);
-%    axis image;
-%    subplot(3, 1, 3);
-%    imagesc(dec_img);
-%    axis image;
    
    if i_file == 1 %Pre-allocates matrix size once image size has been established
        fullMatrixSize = zeros(size(dec_img,1), size(dec_img,2), num_files);
        fullMatrixSize(:,:,1) = dec_img;
        img = fullMatrixSize;
+       
+       allNum = zeros(size(img,3), 1);
+       allNum(1) = sliceNum;
    else
        img(:,:,i_file) = dec_img;
+       allNum(i_file) = sliceNum;
    end
    
-   %image(img(:,:,i_file));
 end
 cd(cwd);
 

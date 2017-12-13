@@ -65,22 +65,22 @@ yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J61');
 
 %PL = LoadImgStack('PL\');
 %Skin = LoadImgStack('CortexSkin\');
-PL = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
-Skin = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
-IL = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
-CG1 = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
+[PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
+[SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
+[ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
+[CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
 
-PlotImgStack(PL, PLcolor);
-PlotImgStack(flipdim(PL,2), PLcolor);
+PlotImgStack(PLslices, PLcolor);
+PlotImgStack(flipdim(PLslices,2), PLcolor);
 
-PlotImgStack(Skin, Skincolor);
-PlotImgStack(flipdim(Skin,2), Skincolor);
+PlotImgStack(SkinSlices, Skincolor);
+PlotImgStack(flipdim(SkinSlices,2), Skincolor);
 
-PlotImgStack(IL, ILcolor);
-PlotImgStack(flipdim(IL,2), ILcolor);
+PlotImgStack(ILslices, ILcolor);
+PlotImgStack(flipdim(ILslices,2), ILcolor);
 
-PlotImgStack(CG1, CG1color);
-PlotImgStack(flipdim(CG1,2), CG1color);
+PlotImgStack(CG1slices, CG1color);
+PlotImgStack(flipdim(CG1slices,2), CG1color);
 
 
 
