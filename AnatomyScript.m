@@ -106,12 +106,3 @@ set(gcf, 'Color', [1 1 1])
  axis off
 
 
-%%% Code for making a movie; just comment out. 
-% az_angles = [1:5:355]
-% el_angles = [10 * ones(1, length(az_angles))];
-% num_frames = length(az_angles);
-% for i_frame = 1:num_frames
-%     view(az_angles(i_frame), el_angles(i_frame));
-%     M(i_frame) = getframe(gcf);
-% end
-% movie2avi(M, 'Movie.avi', 'compression', 'cinepak', 'quality', 100);
