@@ -1,21 +1,30 @@
-function PlotImgStack(img, face_color, sliceNums, spacing)
+function PlotImgStack(imgCell, flipSlice)
+%img, face_color, sliceNums, spacing)
 
 %%% BUILD SURFACE
 % load 2D img array and construct 3D image
 
 isovalue = 0.5; %Approximate measure of how much the image is smoothed
 
+if flipSlice == 1
+    img = flip(imgCell{1},2);
+else
+    img = imgCell{1};
+end
+
 img(img>0) = 1; % thresholds image, since otherwise GIF indexed (not binary)
 %All pixels are either 1 or 0
 
-sliceWidths = spacing(sliceNums);
-runningTotal = 0;
+%sliceWidths = spacing(imgCell{2});
+zRange = imgCell{3};
+%runningTotal = 0;
 %zRange = zeros(size(img(3
+%{
 for numSlices = 1:size(img,3)
     runningTotal = runningTotal + sliceWidths(numSlices);
     zRange(numSlices) = runningTotal;
 end
-
+%}
 xRange = [0:(17.5/(size(img,1)-1)):17.5];
 yRange = [0:(16.5/(size(img,2)-1)):16.5];
 
@@ -24,7 +33,7 @@ img = permute(img, [2 3 1]); % realign dimensions so that ap/ml/dv
 %x = slice y (467 pixels)
 %y = image number (equal to number of slices)
 %z = slice x (434 pixels)
-img = flipdim(img,3); %Flips up/down
+img = flip(img,3); %Flips up/down
 % img = flipdim(img,2); % flip left/right
 
 %h_iso = patch(isosurface(transpose(sliceWidths), yRange, xRange, img, isovalue));
@@ -33,7 +42,7 @@ h_iso = patch(isosurface(zRange, yRange, xRange, img, isovalue));
 %Isosurface creates vertices of shell
 %Patch creates polygons surrounding shell via vertices
 
-isonormals(img, h_iso); % effect only really noticeable on zoom
+isonormals(imgCell{1}, h_iso); % effect only really noticeable on zoom
 %Sets VertexNormals property of img to those calculated by h_iso, which
 %determines the shape and orientation of vertex patch
 
@@ -44,12 +53,12 @@ h_cap = patch(isocaps(zRange, yRange, xRange, img, isovalue, 'below'));
 
 % %%% LIGHTING OPTIONS
 
- set(h_iso, 'FaceColor', face_color, 'EdgeColor', 'none');
+ set(h_iso, 'FaceColor', imgCell{4}, 'EdgeColor', 'none');
  set(h_iso, 'SpecularColorReflectance', 0, 'SpecularExponent', 50, 'FaceAlpha', 0.4);
- set(h_cap, 'FaceColor', face_color, 'EdgeColor', 'none');
+ set(h_cap, 'FaceColor', imgCell{4}, 'EdgeColor', 'none');
  set(h_cap, 'SpecularColorReflectance', 0, 'SpecularExponent', 50, 'FaceAlpha', 0.4);
 
- set(gca, 'XTick', zRange(1):zRange(end));
+ %set(gca, 'XTick', zRange(1):zRange(end));
 %%% APPLY LABELS
 %{
  set(gca, ...

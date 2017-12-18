@@ -53,37 +53,63 @@ Electrodes_Left = [
 ];
 %}
 
-PLcolor = [0.5, 0.5, 0.8]; %purple
-Skincolor = [0.5, 0.5, 0.5]; %gray
-ILcolor = [0.8 0.5 0.5]; %pink
-CG1color = [0.5 0.8 0.5]; %green
+if ~exist('loadedImages', 'var')
+%Cells hold data on brain regions
+%{1} = Matrix of pixel data
+%{2} = Figure range for images of region
+%{3} = Bregma locations of slices corresponding to images in {2}
+%{4} = Region colour
+PLcell = {1,4};
+Skincell = {1,4};
+ILcell = {1,4};
+CG1cell = {1,4};
+
+PLcell{4} = [0.5, 0.5, 0.8]; %purple
+Skincell{4} = [0.5, 0.5, 0.5]; %gray
+ILcell{4} = [0.8 0.5 0.5]; %pink
+CG1cell{4} = [0.5 0.8 0.5]; %green
 
 masterImageDir = 'Paxinos & Watson\';
-yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J61'); 
+yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'K2:K61'); 
 %Indicates where the scale on the image starts so that slices are lined up
 %properly
-nextSpace = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'B2:B61');
-
-if ~exist('PLslices', 'var')
+nextSpace = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'C2:C61');
 
 [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
+PLcell{1} = PLslices;
+PLcell{2} = PLnum;
+PLcell{3} = nextSpace(PLnum);
+
 %PlotImgStack(PLslices, PLcolor);
 [SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
+Skincell{1} = SkinSlices;
+Skincell{2} = SkinNum;
+Skincell{3} = nextSpace(SkinNum);
+
 [ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
+ILcell{1} = ILslices;
+ILcell{2} = ILnum;
+ILcell{3} = nextSpace(ILnum);
+
 [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
+CG1cell{1} = CG1slices;
+CG1cell{2} = CG1num;
+CG1cell{3} = nextSpace(CG1num);
+
+loadedImages = 1;
 end
 
-PlotImgStack(PLslices, PLcolor, PLnum, nextSpace);
-PlotImgStack(flipdim(PLslices,2), PLcolor, PLnum, nextSpace);
+PlotImgStack(PLcell, 0);
+PlotImgStack(PLcell, 1);
 
-PlotImgStack(SkinSlices, Skincolor, SkinNum, nextSpace);
-PlotImgStack(flipdim(SkinSlices,2), Skincolor, SkinNum, nextSpace);
+PlotImgStack(Skincell, 0);
+PlotImgStack(Skincell, 1);
 
-PlotImgStack(ILslices, ILcolor, ILnum, nextSpace);
-PlotImgStack(flipdim(ILslices,2), ILcolor, ILnum, nextSpace);
+PlotImgStack(ILcell, 0);
+PlotImgStack(ILcell, 1);
 
-PlotImgStack(CG1slices, CG1color, CG1num, nextSpace);
-PlotImgStack(flipdim(CG1slices,2), CG1color, CG1num, nextSpace);
+PlotImgStack(CG1cell, 0);
+PlotImgStack(CG1cell, 1);
 
 
 
