@@ -62,24 +62,29 @@ masterImageDir = 'Paxinos & Watson\';
 yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J61'); 
 %Indicates where the scale on the image starts so that slices are lined up
 %properly
+nextSpace = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'B2:B61');
+
+if ~exist('PLslices', 'var')
 
 [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
 %PlotImgStack(PLslices, PLcolor);
 [SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
 [ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
 [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
+end
 
-PlotImgStack(PLslices, PLcolor);
-PlotImgStack(flipdim(PLslices,2), PLcolor);
+PlotImgStack(PLslices, PLcolor, PLnum, nextSpace);
+PlotImgStack(flipdim(PLslices,2), PLcolor, PLnum, nextSpace);
 
-PlotImgStack(SkinSlices, Skincolor);
-PlotImgStack(flipdim(SkinSlices,2), Skincolor);
+PlotImgStack(SkinSlices, Skincolor, SkinNum, nextSpace);
+PlotImgStack(flipdim(SkinSlices,2), Skincolor, SkinNum, nextSpace);
 
-PlotImgStack(ILslices, ILcolor);
-PlotImgStack(flipdim(ILslices,2), ILcolor);
+PlotImgStack(ILslices, ILcolor, ILnum, nextSpace);
+PlotImgStack(flipdim(ILslices,2), ILcolor, ILnum, nextSpace);
 
-PlotImgStack(CG1slices, CG1color);
-PlotImgStack(flipdim(CG1slices,2), CG1color);
+PlotImgStack(CG1slices, CG1color, CG1num, nextSpace);
+PlotImgStack(flipdim(CG1slices,2), CG1color, CG1num, nextSpace);
+
 
 
 
