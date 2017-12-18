@@ -1,10 +1,7 @@
 % % % Code to make a 3D reconstruction of the rat brain, based on images
-% from Swanson.  Images from Swanson corresponding to brain sections are
-% made into images corresponding to 11 sections in the AP plane (frontal
-% sections) [4.7:-0.5:-0.3], note that the Swanson sections are slightly
-% off (+/- 0.05) from regular sections.  
-% Eyal Kimchi, Kumar Narayanan, Mark Laubach, 2006.  Based on Eyal's code,
-% adapted by Kumar.
+% from Paxinos & Watson.
+% Erica Nordin, 2017.
+% Based on code by Eyal Kimchi and Kumar Narayanan.
 
 
 clf
@@ -73,43 +70,49 @@ masterImageDir = 'Paxinos & Watson\';
 yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'K2:K61'); 
 %Indicates where the scale on the image starts so that slices are lined up
 %properly
-nextSpace = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'C2:C61');
+bregma = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'C2:C61');
+%Bregma coordinates for slices
+
+xyImageSize = zeros(1,2);
+xyImageSize(1,1) = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'F2:F2');
+xyImageSize(1,2) = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J2');
+
 
 [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
 PLcell{1} = PLslices;
 PLcell{2} = PLnum;
-PLcell{3} = nextSpace(PLnum);
+PLcell{3} = bregma(PLnum);
 
 %PlotImgStack(PLslices, PLcolor);
 [SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
 Skincell{1} = SkinSlices;
 Skincell{2} = SkinNum;
-Skincell{3} = nextSpace(SkinNum);
+Skincell{3} = bregma(SkinNum);
 
 [ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
 ILcell{1} = ILslices;
 ILcell{2} = ILnum;
-ILcell{3} = nextSpace(ILnum);
+ILcell{3} = bregma(ILnum);
 
 [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
 CG1cell{1} = CG1slices;
 CG1cell{2} = CG1num;
-CG1cell{3} = nextSpace(CG1num);
+CG1cell{3} = bregma(CG1num);
 
 loadedImages = 1;
 end
 
-PlotImgStack(PLcell, 0);
-PlotImgStack(PLcell, 1);
+PlotImgStack(PLcell, 0, xyImageSize);
+PlotImgStack(PLcell, 1, xyImageSize);
 
-PlotImgStack(Skincell, 0);
-PlotImgStack(Skincell, 1);
+PlotImgStack(Skincell, 0, xyImageSize);
+PlotImgStack(Skincell, 1, xyImageSize);
 
-PlotImgStack(ILcell, 0);
-PlotImgStack(ILcell, 1);
+PlotImgStack(ILcell, 0, xyImageSize);
+PlotImgStack(ILcell, 1, xyImageSize);
 
-PlotImgStack(CG1cell, 0);
-PlotImgStack(CG1cell, 1);
+PlotImgStack(CG1cell, 0, xyImageSize);
+PlotImgStack(CG1cell, 1, xyImageSize);
 
 
 %%% APPLY LABELS

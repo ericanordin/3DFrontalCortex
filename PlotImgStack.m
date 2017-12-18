@@ -1,8 +1,14 @@
-function PlotImgStack(imgCell, flipSlice)
-%img, face_color, sliceNums, spacing)
+function PlotImgStack(imgCell, flipSlice, imageDim)
 
 %%% BUILD SURFACE
 % load 2D img array and construct 3D image
+
+%Input:
+%imgCell contains the four fields outlined in AnatomyScript
+%flipSlice indicates whether the image is to flipped to plot the opposite
+%hemisphere
+%imageDim = width (1) and height (2) of the images. Assumed to be constant
+%for every image.
 
 isovalue = 0.5; %Approximate measure of how much the image is smoothed
 
@@ -25,8 +31,8 @@ for numSlices = 1:size(img,3)
     zRange(numSlices) = runningTotal;
 end
 %}
-xRange = [0:(17.5/(size(img,1)-1)):17.5];
-yRange = [0:(16.5/(size(img,2)-1)):16.5];
+xRange = [0:(imageDim(1)/(size(img,1)-1)):imageDim(1)];
+yRange = [0:(imageDim(2)/(size(img,2)-1)):imageDim(2)];
 
 img = smooth3(img, 'box', [5 5 7]);
 img = permute(img, [2 3 1]); % realign dimensions so that ap/ml/dv
