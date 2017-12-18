@@ -112,7 +112,20 @@ PlotImgStack(CG1cell, 0);
 PlotImgStack(CG1cell, 1);
 
 
-
+%%% APPLY LABELS
+%{
+ set(gca, ...
+     'XTick', 1:1:11, ...
+     'YTick', 10:10:110, ...
+     'ZTick', 0:10:100);
+ set(gca, ...
+     'XTickLabel', [4.7:-0.5:-0.3], ...
+     'YTickLabel', [-5:1:5], ...
+     'ZTickLabel', [-9:1:1]);
+%}
+%xlabel('AP');
+%ylabel('ML');
+%zlabel('DV');
 
  lighting phong;
     lightangle(190, 45);
@@ -120,7 +133,7 @@ PlotImgStack(CG1cell, 1);
   lightangle(120, 20);
   lightangle(80, 20);
   lightangle(45, 0);
-view(-90, 0);
+%view(30, 30);
  axis vis3d tight %Reduce to size of image and freeze aspect ratio
  %Matlab's default setting seems to allow the tick marks to set the
  %spacing, giving the aspect ratio (see PlotImgStack)

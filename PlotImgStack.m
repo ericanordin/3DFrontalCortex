@@ -54,9 +54,9 @@ h_cap = patch(isocaps(zRange, yRange, xRange, img, isovalue, 'below'));
 % %%% LIGHTING OPTIONS
 
  set(h_iso, 'FaceColor', imgCell{4}, 'EdgeColor', 'none');
- set(h_iso, 'SpecularColorReflectance', 0, 'SpecularExponent', 50, 'FaceAlpha', 0.4);
+ set(h_iso, 'SpecularColorReflectance', 0, 'SpecularExponent', 50, 'FaceAlpha', 0.2);
  set(h_cap, 'FaceColor', imgCell{4}, 'EdgeColor', 'none');
- set(h_cap, 'SpecularColorReflectance', 0, 'SpecularExponent', 50, 'FaceAlpha', 0.4);
+ set(h_cap, 'SpecularColorReflectance', 0, 'SpecularExponent', 50, 'FaceAlpha', 0.2);
 
  %set(gca, 'XTick', zRange(1):zRange(end));
 %%% APPLY LABELS
@@ -70,7 +70,7 @@ h_cap = patch(isocaps(zRange, yRange, xRange, img, isovalue, 'below'));
      'YTickLabel', [-5:1:5], ...
      'ZTickLabel', [-9:1:1]);
 %}
-xlabel('AP');
-ylabel('ML');
-zlabel('DV');
+%xlabel('AP');
+%ylabel('ML');
+%zlabel('DV');
 
