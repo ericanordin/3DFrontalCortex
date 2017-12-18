@@ -49,8 +49,9 @@ h_cap = patch(isocaps(zRange, yRange, xRange, img, isovalue, 'below'));
  set(h_cap, 'FaceColor', face_color, 'EdgeColor', 'none');
  set(h_cap, 'SpecularColorReflectance', 0, 'SpecularExponent', 50, 'FaceAlpha', 0.4);
 
+ set(gca, 'XTick', zRange(1):zRange(end));
 %%% APPLY LABELS
-
+%{
  set(gca, ...
      'XTick', 1:1:11, ...
      'YTick', 10:10:110, ...
@@ -59,6 +60,7 @@ h_cap = patch(isocaps(zRange, yRange, xRange, img, isovalue, 'below'));
      'XTickLabel', [4.7:-0.5:-0.3], ...
      'YTickLabel', [-5:1:5], ...
      'ZTickLabel', [-9:1:1]);
+%}
 xlabel('AP');
 ylabel('ML');
 zlabel('DV');
