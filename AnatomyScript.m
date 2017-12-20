@@ -137,7 +137,7 @@ PlotImgStack(CG1cell, 1, xyImageSize);
   lightangle(80, 20);
   lightangle(45, 0);
 %view(30, 30);
- axis vis3d tight %Reduce to size of image and freeze aspect ratio
+ axis vis3d tight equal %Reduce to size of image and freeze aspect ratio
  %Matlab's default setting seems to allow the tick marks to set the
  %spacing, giving the aspect ratio (see PlotImgStack)
  
