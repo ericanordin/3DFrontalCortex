@@ -10,7 +10,7 @@ function PlotImgStack(imgCell, flipSlice, imageDim)
 %imageDim = width (1) and height (2) of the images. Assumed to be constant
 %for every image.
 
-isovalue = 0.5; %Approximate measure of how much the image is smoothed
+isovalue = imgCell{5}; %Approximate measure of how much the image is smoothed
 
 if flipSlice == 1
     img = flip(imgCell{1},2);

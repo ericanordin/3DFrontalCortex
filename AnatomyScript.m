@@ -56,15 +56,21 @@ if ~exist('loadedImages', 'var')
 %{2} = Figure range for images of region
 %{3} = Bregma locations of slices corresponding to images in {2}
 %{4} = Region colour
-PLcell = {1,4};
-Skincell = {1,4};
-ILcell = {1,4};
-CG1cell = {1,4};
+%{5} = Amount of smoothing
+PLcell = {1,5};
+Skincell = {1,5};
+ILcell = {1,5};
+CG1cell = {1,5};
 
 PLcell{4} = [0.5, 0.5, 0.8]; %purple
 Skincell{4} = [0.5, 0.5, 0.5]; %gray
 ILcell{4} = [0.8 0.5 0.5]; %pink
 CG1cell{4} = [0.5 0.8 0.5]; %green
+
+PLcell{5} = 0.58;
+Skincell{5} = 0.5;
+ILcell{5} = 0.6;
+CG1cell{5} = 0.48;
 
 masterImageDir = 'Paxinos & Watson\';
 yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'K2:K61'); 
@@ -78,6 +84,11 @@ xyImageSize(1,1) = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'F2:F2');
 xyImageSize(1,2) = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J2');
 
 
+[ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
+ILcell{1} = ILslices;
+ILcell{2} = ILnum;
+ILcell{3} = bregma(ILnum);
+
 [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
 PLcell{1} = PLslices;
 PLcell{2} = PLnum;
@@ -89,10 +100,6 @@ Skincell{1} = SkinSlices;
 Skincell{2} = SkinNum;
 Skincell{3} = bregma(SkinNum);
 
-[ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
-ILcell{1} = ILslices;
-ILcell{2} = ILnum;
-ILcell{3} = bregma(ILnum);
 
 [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
 CG1cell{1} = CG1slices;
@@ -102,14 +109,15 @@ CG1cell{3} = bregma(CG1num);
 loadedImages = 1;
 end
 
+
+PlotImgStack(ILcell, 0, xyImageSize);
+PlotImgStack(ILcell, 1, xyImageSize);
+
 PlotImgStack(PLcell, 0, xyImageSize);
 PlotImgStack(PLcell, 1, xyImageSize);
 
 PlotImgStack(Skincell, 0, xyImageSize);
 PlotImgStack(Skincell, 1, xyImageSize);
-
-PlotImgStack(ILcell, 0, xyImageSize);
-PlotImgStack(ILcell, 1, xyImageSize);
 
 PlotImgStack(CG1cell, 0, xyImageSize);
 PlotImgStack(CG1cell, 1, xyImageSize);
