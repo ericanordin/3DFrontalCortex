@@ -1,25 +1,30 @@
-function [img, allNum] = LoadImgStack(dir_stack, shiftArray) 
+function [img, allNum] = LoadImgStack(regionDir, shiftArray, imageHeight) 
 
 %%% EXTRACT AND SAVE IMAGE STACK
 
 %Input
-%dir_stack: the subfolder containing the images for the brain region
+%regionDir: the subfolder containing the images for the brain region. 
+%Relative to the main folder containing AnatomyScript and associated
+%functions.
 %shiftArray: expresses adjustments that need to be made to line the images
-%up properly
+%up properly (see yShift in AnatomyScript)
+%imageHeight: in mm. Consistent across Paxinos & Watson images.
 
 %Output
 %img: matrix of slice data
-%allNum: numbering of slice corresponding to img
+%allNum: numbering of slices corresponding to img
 
+try 
+    
 dec = 9; %Decimation factor: taking every 9th pixel
-imageHeight = 16.5; %mm. Matches P&W scale
+x=y;
 
 cwd = pwd; 
-cd(dir_stack);
+cd(regionDir);
 files = dir('*.tif');
 num_files = length(files);
 
-fprintf('\n%s: ', char(dir_stack));
+fprintf('\n%s: ', char(regionDir));
 
 for i_file = 1:num_files
    fprintf(' %d', i_file); 
@@ -70,4 +75,13 @@ for i_file = 1:num_files
    
 end
 cd(cwd);
+
+catch ME
+    fprintf(2, 'Error in LoadImgStack \n%s');
+    fprintf(2, ME.message); 
+    for k = 1:length(ME.stack)
+        ME.stack(k) %Displays file, name, and line where error occurred
+    end
+    rethrow(ME);
+end
 

@@ -85,27 +85,37 @@ if ~exist('loadedImages', 'var')
     %Image height:
     xyImageSize(1,2) = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J2');
     
+    mainDir = pwd;
+    
+    try
     %Load images into Matlab
     
-    [ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift);
+    [ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift, xyImageSize(1,2));
     ILcell{1} = ILslices;
     ILcell{2} = ILnum;
     ILcell{3} = bregma(ILnum);
     
-    [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift);
+    [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift, xyImageSize(1,2));
     PLcell{1} = PLslices;
     PLcell{2} = PLnum;
     PLcell{3} = bregma(PLnum);
     
-    [SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift);
+    [SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift, xyImageSize(1,2));
     Skincell{1} = SkinSlices;
     Skincell{2} = SkinNum;
     Skincell{3} = bregma(SkinNum);
     
-    [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift);
+    [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift, xyImageSize(1,2));
     CG1cell{1} = CG1slices;
     CG1cell{2} = CG1num;
     CG1cell{3} = bregma(CG1num);
+    
+    catch
+        cd(mainDir); 
+        %Returns to primary directory if error occurs in LoadImgStack
+        
+        return;
+    end
     
     loadedImages = 1; %Indicates that image loading has been completed so 
     %this step does not have to be repeated when plotting repeatedly.
@@ -129,7 +139,8 @@ PlotImgStack(CG1cell, 0, xyImageSize);
 PlotImgStack(CG1cell, 1, xyImageSize);
 
 
-%%% APPLY LABELS
+%%% APPLY LABELS (for development purposes; labels and axes are removed at
+%%% the end of the script)
 %{
  set(gca, ...
      'XTick', 1:1:11, ...
@@ -139,30 +150,36 @@ PlotImgStack(CG1cell, 1, xyImageSize);
      'XTickLabel', [4.7:-0.5:-0.3], ...
      'YTickLabel', [-5:1:5], ...
      'ZTickLabel', [-9:1:1]);
-%}
-%xlabel('AP');
-%ylabel('ML');
-%zlabel('DV');
 
+xlabel('AP');
+ylabel('ML');
+zlabel('DV');
+%}
+
+%3D image lighting
 lighting phong;
 lightangle(190, 45);
 lightangle(-20, 45);
 lightangle(120, 20);
 lightangle(80, 20);
 lightangle(45, 0);
-%view(30, 30);
-axis vis3d tight equal %Reduce to size of image and freeze aspect ratio
-%Matlab's default setting seems to allow the tick marks to set the
-%spacing, giving the aspect ratio (see PlotImgStack)
 
+axis vis3d tight equal %Reduce to size of image and freeze aspect ratio so 
+%that all axes have equal units.
+
+view(30, 30);
+
+%Plot electrode coordinates
 %{
 PlotCoords(Electrodes_Right(:, 1),Electrodes_Right(:, 2), Electrodes_Right(:, 3)', 'k.');
 PlotCoords(Electrodes_Left(:, 1), Electrodes_Left(:, 2), Electrodes_Left(:, 3)', 'k.');
 %}
 
 
-set(gcf, 'Color', [1 1 1])
+set(gcf, 'Color', [1 1 1]); %White background
+%Remove axis markings
 set(gca, 'xtick', [], 'ytick', [], 'ztick', []);
 axis off
+%Image shrinks markedly when axes are included
 
 

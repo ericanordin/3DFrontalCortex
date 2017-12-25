@@ -1,7 +1,7 @@
 function PlotImgStack(imgCell, flipSlice, imageDim)
 
 %%% BUILD SURFACE
-% load 2D img array and construct 3D image
+% load 2D image array and construct 3D image
 
 %Input:
 %imgCell contains the four fields outlined in AnatomyScript
