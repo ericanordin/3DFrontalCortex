@@ -19,7 +19,7 @@ Electrodes = [
 %}
 
 if ~exist('loadedImages', 'var')
-    %if-loop is skipped if it has already been completed once. Assumes that
+    %if-loop is skipped if images have already been loaded. Assumes that
     %the necessary variables are stored in the Workspace.
     
     %If variables are stored in a .mat file for later use, the following
@@ -34,8 +34,9 @@ if ~exist('loadedImages', 'var')
     %Each slice is stored in a separate layer in the Z dimension.
     %{2} = Figure numbers for brain region. Eg [3 4 5 6] if the region 
     %starts on figure 3 and ends at figure 6 of the atlas.
-    %{3} = Bregma locations of slices corresponding to figures in {2} to 
-    %ensure regions are properly aligned and spaced.
+    %{3} = Locations of slices corresponding to figures in {2} to 
+    %ensure regions are properly aligned and spaced. Measured in mm
+    %relative to Bregma.
     %{4} = Region colour (for easy visual representation)
     %{5} = Amount of smoothing. As this value increases, adjacent brain 
     %regions overlap more in the 3D reconstruction, but gaps are smaller.
@@ -118,7 +119,7 @@ if ~exist('loadedImages', 'var')
     end
     
     loadedImages = 1; %Indicates that image loading has been completed so 
-    %this step does not have to be repeated when plotting repeatedly.
+    %the if-loop does not have to be repeated when plotting repeatedly.
 end
 
 %Plot hemisphere and its mirror image for all brain regions. 
