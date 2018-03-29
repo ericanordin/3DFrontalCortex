@@ -1,5 +1,5 @@
 % % % Code to build a 3D reconstruction of the rat brain from 2D brain 
-% slices. This version uses images from Paxinos & Watson 6th ed, but can
+% slices. This version uses images from Paxinos & Watson MRI Atlas 2015, but can
 % be modified for a different atlas.
 % Erica Nordin, 2017.
 % Based on code by Eyal Kimchi and Kumar Narayanan.
@@ -41,41 +41,44 @@ if ~exist('loadedImages', 'var')
     %{5} = Amount of smoothing. As this value increases, adjacent brain 
     %regions overlap more in the 3D reconstruction, but gaps are smaller.
     
-    PLcell = {1,5};
+    A24a_cell = {1,5};
+    A24b_cell = {1,5};
     Skincell = {1,5};
-    ILcell = {1,5};
-    CG1cell = {1,5};
+    A32D_cell = {1,5};
+    A32V_cell = {1,5};
     
-    PLcell{4} = [0.5, 0.5, 0.8]; %purple
+    A24a_cell{4} = [0.5, 0.5, 0.8]; %purple
+    A24b_cell{4} = [0.8, 0.8, 0.8]; %FIX COLOUR
     Skincell{4} = [0.5, 0.5, 0.5]; %gray
-    ILcell{4} = [0.8 0.5 0.5]; %pink
-    CG1cell{4} = [0.5 0.8 0.5]; %green
+    A32D_cell{4} = [0.8 0.5 0.5]; %pink
+    A32V_cell{4} = [0.5 0.8 0.5]; %green
     
     %Approximated ideal isovalues for producing an accurate 3D
     %representation minimizing smoothing artefacts. 
-    PLcell{5} = 0.58;
+    A24a_cell{5} = 0.58;
+    A24b_cell{5} = 0.58;
     Skincell{5} = 0.5;
-    ILcell{5} = 0.6;
-    CG1cell{5} = 0.48;
+    A32D_cell{5} = 0.6;
+    A32V_cell{5} = 0.48;
     
-    masterImageDir = 'Paxinos & Watson\';
+    masterImageDir = 'P&W MRI\';
     %Where all of the images are stored. Different brain regions are stored
     %in different subfolders.
     
-    dataSheet = 'SliceData.xlsx';
+    dataSheet = 'MRI_SliceData.xlsx';
     
     %The program draws key information regarding image details from an
     %excel spreadsheet. For a new atlas, a similar spreadsheet will have to
     %be created or a different method of importing key data must be
     %introduced.
     
-    yShift = xlsread(strcat(masterImageDir, dataSheet), 'K2:K61');
+    yShift = xlsread(strcat(masterImageDir, dataSheet), 'C2:C97');
     %P&W images are not all lined up vertically; some figures are shifted
     %up or down by 1 mm. This variable tracks the starting point for each
     %image so that the 0 point is the same for all when the 3D image is
     %constructed.
     
-    bregma = xlsread(strcat(masterImageDir, dataSheet), 'C2:C61');
+    bregma = xlsread(strcat(masterImageDir, dataSheet), 'B2:B97');
     %Bregma coordinates for slices
     
     %The scaling is the same for all P&W images. If an atlas is used in
@@ -84,34 +87,39 @@ if ~exist('loadedImages', 'var')
     %accordingly.
     xyImageSize = zeros(1,2);
     %Image width:
-    xyImageSize(1,1) = xlsread(strcat(masterImageDir, dataSheet), 'F2:F2');
+    xyImageSize(1,1) = xlsread(strcat(masterImageDir, dataSheet), 'G2:G2');
     %Image height:
-    xyImageSize(1,2) = xlsread(strcat(masterImageDir, dataSheet), 'J2:J2');
+    xyImageSize(1,2) = xlsread(strcat(masterImageDir, dataSheet), 'F2:F2');
     
     mainDir = pwd;
     
     try
     %Load images into Matlab
     
-    [ILslices, ILnum] = LoadImgStack(strcat(masterImageDir, 'IL\'), yShift, xyImageSize(1,2));
-    ILcell{1} = ILslices;
-    ILcell{2} = ILnum;
-    ILcell{3} = bregma(ILnum);
+    [A32D_slices, A32D_num] = LoadImgStack(strcat(masterImageDir, 'A32D\'), yShift, xyImageSize(1,2));
+    A32D_cell{1} = A32D_slices;
+    A32D_cell{2} = A32D_num;
+    A32D_cell{3} = bregma(A32D_num);
     
-    [PLslices, PLnum] = LoadImgStack(strcat(masterImageDir, 'PL\'), yShift, xyImageSize(1,2));
-    PLcell{1} = PLslices;
-    PLcell{2} = PLnum;
-    PLcell{3} = bregma(PLnum);
+    [A24a_slices, A24a_num] = LoadImgStack(strcat(masterImageDir, 'A24a\'), yShift, xyImageSize(1,2));
+    A24a_cell{1} = A24a_slices;
+    A24a_cell{2} = A24a_num;
+    A24a_cell{3} = bregma(A24a_num);
+    
+    [A24b_slices, A24b_num] = LoadImgStack(strcat(masterImageDir, 'A24b\'), yShift, xyImageSize(1,2));
+    A24b_cell{1} = A24b_slices;
+    A24b_cell{2} = A24b_num;
+    A24b_cell{3} = bregma(A24b_num);
     
     [SkinSlices, SkinNum] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift, xyImageSize(1,2));
     Skincell{1} = SkinSlices;
     Skincell{2} = SkinNum;
     Skincell{3} = bregma(SkinNum);
     
-    [CG1slices, CG1num] = LoadImgStack(strcat(masterImageDir, 'CG1\'), yShift, xyImageSize(1,2));
-    CG1cell{1} = CG1slices;
-    CG1cell{2} = CG1num;
-    CG1cell{3} = bregma(CG1num);
+    [A32V_slices, A32V_num] = LoadImgStack(strcat(masterImageDir, 'A32V\'), yShift, xyImageSize(1,2));
+    A32V_cell{1} = A32V_slices;
+    A32V_cell{2} = A32V_num;
+    A32V_cell{3} = bregma(A32V_num);
     
     catch
         cd(mainDir); 
@@ -129,17 +137,20 @@ end
 %identical.
 %Images containing both hemispheres only need to be plotted once.
 
-PlotImgStack(ILcell, 0, xyImageSize);
-PlotImgStack(ILcell, 1, xyImageSize);
+PlotImgStack(A32D_cell, 0, xyImageSize);
+PlotImgStack(A32D_cell, 1, xyImageSize);
 
-PlotImgStack(PLcell, 0, xyImageSize);
-PlotImgStack(PLcell, 1, xyImageSize);
+PlotImgStack(A24a_cell, 0, xyImageSize);
+PlotImgStack(A24a_cell, 1, xyImageSize);
+
+PlotImgStack(A24b_cell, 0, xyImageSize);
+PlotImgStack(A24b_cell, 1, xyImageSize);
 
 PlotImgStack(Skincell, 0, xyImageSize);
 PlotImgStack(Skincell, 1, xyImageSize);
 
-PlotImgStack(CG1cell, 0, xyImageSize);
-PlotImgStack(CG1cell, 1, xyImageSize);
+PlotImgStack(A32V_cell, 0, xyImageSize);
+PlotImgStack(A32V_cell, 1, xyImageSize);
 
 
 %%% APPLY LABELS (for development purposes; labels and axes are removed at

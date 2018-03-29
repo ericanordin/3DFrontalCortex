@@ -7,7 +7,7 @@ function PlotImgStack(imgCell, flipSlice, imageDim)
 %imgCell contains the four fields outlined in AnatomyScript
 %flipSlice indicates whether the image is to be flipped to plot the opposite
 %hemisphere
-%imageDim = width (1) and height (2) of the images in cm. Assumed to be constant
+%imageDim = width (1) and height (2) of the images in mm. Assumed to be constant
 %for every image.
 
 isovalue = imgCell{5}; %Approximate measure of how much the image is smoothed
