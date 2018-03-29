@@ -48,7 +48,7 @@ if ~exist('loadedImages', 'var')
     A32V_cell = {1,5};
     
     A24a_cell{4} = [0.5, 0.5, 0.8]; %purple
-    A24b_cell{4} = [0.8, 0.8, 0.8]; %FIX COLOUR
+    A24b_cell{4} = [0.2, 0.2, 0.9]; %blue? fix.
     Skincell{4} = [0.5, 0.5, 0.5]; %gray
     A32D_cell{4} = [0.8 0.5 0.5]; %pink
     A32V_cell{4} = [0.5 0.8 0.5]; %green
@@ -72,7 +72,7 @@ if ~exist('loadedImages', 'var')
     %be created or a different method of importing key data must be
     %introduced.
     
-    yShift = xlsread(strcat(masterImageDir, dataSheet), 'C2:C97');
+    yShift = xlsread(strcat(masterImageDir, dataSheet), 'D2:D97');
     %P&W images are not all lined up vertically; some figures are shifted
     %up or down by 1 mm. This variable tracks the starting point for each
     %image so that the 0 point is the same for all when the 3D image is
@@ -87,9 +87,9 @@ if ~exist('loadedImages', 'var')
     %accordingly.
     xyImageSize = zeros(1,2);
     %Image width:
-    xyImageSize(1,1) = xlsread(strcat(masterImageDir, dataSheet), 'G2:G2');
+    xyImageSize(1,1) = xlsread(strcat(masterImageDir, dataSheet), 'G4:G4');
     %Image height:
-    xyImageSize(1,2) = xlsread(strcat(masterImageDir, dataSheet), 'F2:F2');
+    xyImageSize(1,2) = xlsread(strcat(masterImageDir, dataSheet), 'F4:F4');
     
     mainDir = pwd;
     
@@ -138,19 +138,19 @@ end
 %Images containing both hemispheres only need to be plotted once.
 
 PlotImgStack(A32D_cell, 0, xyImageSize);
-PlotImgStack(A32D_cell, 1, xyImageSize);
+%PlotImgStack(A32D_cell, 1, xyImageSize);
 
 PlotImgStack(A24a_cell, 0, xyImageSize);
-PlotImgStack(A24a_cell, 1, xyImageSize);
+%PlotImgStack(A24a_cell, 1, xyImageSize);
 
 PlotImgStack(A24b_cell, 0, xyImageSize);
-PlotImgStack(A24b_cell, 1, xyImageSize);
+%PlotImgStack(A24b_cell, 1, xyImageSize);
 
 PlotImgStack(Skincell, 0, xyImageSize);
-PlotImgStack(Skincell, 1, xyImageSize);
+%PlotImgStack(Skincell, 1, xyImageSize);
 
 PlotImgStack(A32V_cell, 0, xyImageSize);
-PlotImgStack(A32V_cell, 1, xyImageSize);
+%PlotImgStack(A32V_cell, 1, xyImageSize);
 
 
 %%% APPLY LABELS (for development purposes; labels and axes are removed at
