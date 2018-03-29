@@ -42,23 +42,23 @@ for i_file = 1:num_files
    sliceNum = str2double(nameNoExt(end-2:end)); 
    %Assumes 3-digit designation at end of file
    
-   yStart = shiftArray(sliceNum);
+   yShift = shiftArray(sliceNum); 
    
    %P&W images are horizontally consistent and therefore only adjusted
    %vertically; an atlas that is not will have to implement a variation of
    %this algorithm for left/right shifting.
-   if yStart ~= 0 %Image must be shifted up/down
+   if yShift ~= 0 %Image must be shifted up/down
        pixelUnitRatio = round(size(grayImg, 1)/imageHeight); %y-axis
        
        %Appropriate number of pixels to shift corresponding to yStart
-       pixelShift = abs(round(pixelUnitRatio*yStart));
+       pixelShift = abs(round(pixelUnitRatio*yShift));
        
        tempImg = grayImg; %Matches size
        tempImg(:,:) = mode(mode(grayImg)); %Sets all of tempImg to background color for grayImg
        
        %Shifting assumes area being covered by shift is blank background so
        %data is not being lost. 
-       if yStart > 0 %Shift image down
+       if yShift > 0 %Shift image down
             tempImg(pixelShift+1:end, :) = grayImg(1:end-pixelShift, :);
        else %Shift image up
            tempImg(1:end-pixelShift, :) = grayImg(pixelShift+1:end, :);

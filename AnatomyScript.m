@@ -62,18 +62,20 @@ if ~exist('loadedImages', 'var')
     %Where all of the images are stored. Different brain regions are stored
     %in different subfolders.
     
+    dataSheet = 'SliceData.xlsx';
+    
     %The program draws key information regarding image details from an
     %excel spreadsheet. For a new atlas, a similar spreadsheet will have to
     %be created or a different method of importing key data must be
     %introduced.
     
-    yShift = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'K2:K61');
+    yShift = xlsread(strcat(masterImageDir, dataSheet), 'K2:K61');
     %P&W images are not all lined up vertically; some figures are shifted
     %up or down by 1 mm. This variable tracks the starting point for each
     %image so that the 0 point is the same for all when the 3D image is
     %constructed.
     
-    bregma = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'C2:C61');
+    bregma = xlsread(strcat(masterImageDir, dataSheet), 'C2:C61');
     %Bregma coordinates for slices
     
     %The scaling is the same for all P&W images. If an atlas is used in
@@ -82,9 +84,9 @@ if ~exist('loadedImages', 'var')
     %accordingly.
     xyImageSize = zeros(1,2);
     %Image width:
-    xyImageSize(1,1) = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'F2:F2');
+    xyImageSize(1,1) = xlsread(strcat(masterImageDir, dataSheet), 'F2:F2');
     %Image height:
-    xyImageSize(1,2) = xlsread(strcat(masterImageDir, 'SliceData.xlsx'), 'J2:J2');
+    xyImageSize(1,2) = xlsread(strcat(masterImageDir, dataSheet), 'J2:J2');
     
     mainDir = pwd;
     
