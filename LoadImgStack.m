@@ -1,4 +1,4 @@
-function [img, allNum] = LoadImgStack(regionDir, shiftArray, imageHeight) 
+function [img, allNum, pivotPixel] = LoadImgStack(regionDir, shiftArray, imageHeight, pivotPixel) 
 
 %%% EXTRACT AND SAVE IMAGE STACK
 
@@ -81,7 +81,27 @@ for i_file = 1:num_files
    
    allNum(i_file) = sliceNum;
    
+   
+   
 end
+img(img>0) = 1; % Thresholds image, since otherwise TIF is 
+%indexed (not binary). All pixels are either 1 or 0.
+
+%Find furthest left black pixel
+[~, columns] = find(img == 0);
+%'columns' refer to those which contain at least one black pixel
+minCol = min(columns); %Furthest left column containing black in the stack 
+%of images for the brain region
+
+if pivotPixel == -1 %Left-most point not yet set
+    pivotPixel = minCol;
+else
+    if minCol < pivotPixel
+        pivotPixel = minCol;
+    end
+end
+
+
 cd(cwd); %Returns to master directory
 
 catch ME

@@ -18,9 +18,6 @@ else
     img = imgCell{1};
 end
 
-img(img>0) = 1; % thresholds image, since otherwise GIF indexed (not binary)
-%All pixels are either 1 or 0
-
 zRange = imgCell{3}; %Slice locations
 xRange = [0:(imageDim(1)/(size(img,1)-1)):imageDim(1)]; %Divvy width by pixels
 yRange = [0:(imageDim(2)/(size(img,2)-1)):imageDim(2)]; %Divvy height by pixels
