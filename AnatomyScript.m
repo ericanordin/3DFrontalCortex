@@ -133,7 +133,13 @@ if ~exist('loadedImages', 'var')
     
     pixelWidth = size(A24a_cell{1}, 2); %Could use any cell; all images are equally sized
     
-    extendLength = pixelWidth - pivotPixel + 1;
+    extendLength = pixelWidth - pivotPixel*2 + 1; %Number of pixels of 
+    %whitespace to extend images by to make the left-most black
+    %pixel just right of the middle.
+    extendLength = extendLength+3; %Smoothing causes regions to bite into 
+    %each other across the middle point. The isovalues of the brain regions
+    %determine how many extra pixels should be added to extendLength to
+    %minimize overlap. 
     
     A32D_cell{1} = AdjustImgStack(A32D_cell{1}, extendLength);
     A24a_cell{1} = AdjustImgStack(A24a_cell{1}, extendLength);
