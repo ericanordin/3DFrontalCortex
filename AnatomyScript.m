@@ -43,21 +43,21 @@ if ~exist('loadedImages', 'var')
     
     A24a_cell = {1,5};
     A24b_cell = {1,5};
-    Skincell = {1,5};
+    Skin_cell = {1,5};
     A32D_cell = {1,5};
     A32V_cell = {1,5};
     
-    A24a_cell{4} = [0.5, 0.5, 0.8]; %purple
-    A24b_cell{4} = [0.2, 0.2, 0.9]; %blue? fix.
-    Skincell{4} = [0.5, 0.5, 0.5]; %gray
+    A24a_cell{4} = [0.2, 0.2, 0.9]; %purple
+    A24b_cell{4} = [0.9, 0.9, 0.1]; %yellow
+    Skin_cell{4} = [0.5, 0.5, 0.5]; %gray
     A32D_cell{4} = [0.8 0.5 0.5]; %pink
     A32V_cell{4} = [0.5 0.8 0.5]; %green
     
     %Approximated ideal isovalues for producing an accurate 3D
     %representation minimizing smoothing artefacts. 
-    A24a_cell{5} = 0.7;
-    A24b_cell{5} = 0.7;
-    Skincell{5} = 0.5;
+    A24a_cell{5} = 0.6;
+    A24b_cell{5} = 0.5;
+    Skin_cell{5} = 0.5;
     A32D_cell{5} = 0.7;
     A32V_cell{5} = 0.7;
     
@@ -65,8 +65,7 @@ if ~exist('loadedImages', 'var')
     %Where all of the images are stored. Different brain regions are stored
     %in different subfolders.
     
-    dataSheet = 'MRI_SliceData.xlsx';
-    
+    dataSheet = 'MRI_SliceData.xlsx';    
     %The program draws key information regarding image details from an
     %excel spreadsheet. For a new atlas, a similar spreadsheet will have to
     %be created or a different method of importing key data must be
@@ -102,27 +101,27 @@ if ~exist('loadedImages', 'var')
     [A32D_slices, A32D_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A32D\'), yShift, xyImageSize(1,2), pivotPixel);
     A32D_cell{1} = A32D_slices;
     A32D_cell{2} = A32D_num;
-    A32D_cell{3} = bregma(A32D_num);
+    A32D_cell = SetBregma(A32D_cell, bregma);
     
     [A24a_slices, A24a_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A24a\'), yShift, xyImageSize(1,2), pivotPixel);
     A24a_cell{1} = A24a_slices;
     A24a_cell{2} = A24a_num;
-    A24a_cell{3} = bregma(A24a_num);
+    A24a_cell = SetBregma(A24a_cell, bregma);
     
     [A24b_slices, A24b_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A24b\'), yShift, xyImageSize(1,2), pivotPixel);
     A24b_cell{1} = A24b_slices;
     A24b_cell{2} = A24b_num;
-    A24b_cell{3} = bregma(A24b_num);
+    A24b_cell = SetBregma(A24b_cell, bregma);
     
     [SkinSlices, SkinNum, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift, xyImageSize(1,2), pivotPixel);
-    Skincell{1} = SkinSlices;
-    Skincell{2} = SkinNum;
-    Skincell{3} = bregma(SkinNum);
+    Skin_cell{1} = SkinSlices;
+    Skin_cell{2} = SkinNum;
+    Skin_cell = SetBregma(Skin_cell, bregma);
     
     [A32V_slices, A32V_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A32V\'), yShift, xyImageSize(1,2), pivotPixel);
     A32V_cell{1} = A32V_slices;
     A32V_cell{2} = A32V_num;
-    A32V_cell{3} = bregma(A32V_num);
+    A32V_cell = SetBregma(A32V_cell, bregma);
     
     catch
         cd(mainDir); 
@@ -144,7 +143,7 @@ if ~exist('loadedImages', 'var')
     A32D_cell{1} = AdjustImgStack(A32D_cell{1}, extendLength);
     A24a_cell{1} = AdjustImgStack(A24a_cell{1}, extendLength);
     A24b_cell{1} = AdjustImgStack(A24b_cell{1}, extendLength);
-    Skincell{1} = AdjustImgStack(Skincell{1}, extendLength);
+    Skin_cell{1} = AdjustImgStack(Skin_cell{1}, extendLength);
     A32V_cell{1} = AdjustImgStack(A32V_cell{1}, extendLength);
     
     loadedImages = 1; %Indicates that image loading has been completed so 
@@ -165,8 +164,8 @@ PlotImgStack(A24a_cell, 1, xyImageSize);
 PlotImgStack(A24b_cell, 0, xyImageSize);
 PlotImgStack(A24b_cell, 1, xyImageSize);
 
-PlotImgStack(Skincell, 0, xyImageSize);
-PlotImgStack(Skincell, 1, xyImageSize);
+PlotImgStack(Skin_cell, 0, xyImageSize);
+PlotImgStack(Skin_cell, 1, xyImageSize);
 
 PlotImgStack(A32V_cell, 0, xyImageSize);
 PlotImgStack(A32V_cell, 1, xyImageSize);
