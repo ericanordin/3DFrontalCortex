@@ -25,11 +25,13 @@ if ~exist('loadedImages', 'var')
     %If variables are stored in a .mat file for later use, the following
     %variables must be included for this if-loop to be skipped
     %successfully:
-    %Cells for all brain regions
+    %masterData
     %loadedImages
     %xyImageSize
     
-    imageFolders = {'Cortex/', 'A24a/', 'A24b/', 'A32D', 'A32V'};
+    
+    imageFolders = {'Cortex\', 'A24a\', 'A24b\', 'A32D\', 'A32V\'};
+    %Names of folders containing region images
     numRegions = length(imageFolders);
     
     %Cells hold data on brain regions
@@ -46,40 +48,36 @@ if ~exist('loadedImages', 'var')
     %reconstruction, but gaps are smaller.
     
     dataSets = 5; %The number of cells for each brain region
-    masterData = cell(1,numRegions);
+    masterData = cell(1,numRegions); %Stores all brain region data
     
     
     for region = 1:numRegions
         regionData = {1,dataSets};
-        
         switch imageFolders{region}
-            case 'Cortex/'
+            %Assign color and isovalue for region
+            case 'Cortex\'
                 regionData{4} = [0.5, 0.5, 0.5]; %gray
                 regionData{5} = 0.5;
-            case 'A24a/'
+            case 'A24a\'
                 regionData{4} = [0.2, 0.2, 0.9]; %purple
                 regionData{5} = 0.6;
-            case 'A24b/'
+            case 'A24b\'
                 regionData{4} = [0.9, 0.9, 0.1]; %yellow
                 regionData{5} = 0.5;
-            case 'A32D/'
+            case 'A32D\'
                 regionData{4} = [0.8 0.5 0.5]; %pink
                 regionData{5} = 0.7;
-            case 'A32V/'
+            case 'A32V\'
                 regionData{4} = [0.5 0.8 0.5]; %green
                 regionData{5} = 0.7;
             otherwise
-                %disp('Region ', imageFolders{region}, ' not assigned properties.');
-                fprintf('Region %i not assigned properties.\n', imageFolders{region});
-                regionData{4} = [1 1 1];
+                fprintf('Region %s not assigned properties and will not be shown.\n', imageFolders{region});
+                regionData{4} = [1 1 1]; %white
                 regionData{5} = 0.6;
         end
         
         masterData{region} = regionData;
     end
-    
-    
-    
     
     masterImageDir = 'P&W MRI\';
     %Where all of the images are stored. Different brain regions are stored
@@ -123,32 +121,6 @@ if ~exist('loadedImages', 'var')
             masterData{region}{2} = figureNums;
             masterData{region} = SetBregma(masterData{region}, bregma);
         end
-            %{
-        [A32D_slices, A32D_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A32D\'), yShift, xyImageSize(1,2), pivotPixel);
-        A32D_cell{1} = A32D_slices;
-        A32D_cell{2} = A32D_num;
-        A32D_cell = SetBregma(A32D_cell, bregma);
-        
-        [A24a_slices, A24a_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A24a\'), yShift, xyImageSize(1,2), pivotPixel);
-        A24a_cell{1} = A24a_slices;
-        A24a_cell{2} = A24a_num;
-        A24a_cell = SetBregma(A24a_cell, bregma);
-        
-        [A24b_slices, A24b_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A24b\'), yShift, xyImageSize(1,2), pivotPixel);
-        A24b_cell{1} = A24b_slices;
-        A24b_cell{2} = A24b_num;
-        A24b_cell = SetBregma(A24b_cell, bregma);
-        
-        [SkinSlices, SkinNum, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'Cortex\'), yShift, xyImageSize(1,2), pivotPixel);
-        Skin_cell{1} = SkinSlices;
-        Skin_cell{2} = SkinNum;
-        Skin_cell = SetBregma(Skin_cell, bregma);
-        
-        [A32V_slices, A32V_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A32V\'), yShift, xyImageSize(1,2), pivotPixel);
-        A32V_cell{1} = A32V_slices;
-        A32V_cell{2} = A32V_num;
-        A32V_cell = SetBregma(A32V_cell, bregma);
-        %}
         
     catch
         cd(mainDir);
@@ -157,7 +129,7 @@ if ~exist('loadedImages', 'var')
         return;
     end
     
-    pixelWidth = size(A24a_cell{1}, 2); %Could use any cell; all images are equally sized
+    pixelWidth = size(masterData{1}{1}, 2); %Could use any region; all images are equally sized
     
     extendLength = pixelWidth - pivotPixel*2 + 1; %Number of pixels of
     %whitespace to extend images by to make the left-most black
@@ -170,13 +142,6 @@ if ~exist('loadedImages', 'var')
     for region = 1:numRegions
         masterData{region}{1} = AdjustImgStack(masterData{region}{1}, extendLength);
     end
-        %{
-    A32D_cell{1} = AdjustImgStack(A32D_cell{1}, extendLength);
-    A24a_cell{1} = AdjustImgStack(A24a_cell{1}, extendLength);
-    A24b_cell{1} = AdjustImgStack(A24b_cell{1}, extendLength);
-    Skin_cell{1} = AdjustImgStack(Skin_cell{1}, extendLength);
-    A32V_cell{1} = AdjustImgStack(A32V_cell{1}, extendLength);
-        %}
     
     loadedImages = 1; %Indicates that image loading has been completed so
     %the if-loop does not have to be repeated when plotting repeatedly.
@@ -191,23 +156,6 @@ for region = 1:numRegions
     PlotImgStack(masterData{region}, 0, xyImageSize);
     PlotImgStack(masterData{region}, 1, xyImageSize);
 end
-%{
-
-PlotImgStack(A32D_cell, 0, xyImageSize);
-PlotImgStack(A32D_cell, 1, xyImageSize);
-
-PlotImgStack(A24a_cell, 0, xyImageSize);
-PlotImgStack(A24a_cell, 1, xyImageSize);
-
-PlotImgStack(A24b_cell, 0, xyImageSize);
-PlotImgStack(A24b_cell, 1, xyImageSize);
-
-PlotImgStack(Skin_cell, 0, xyImageSize);
-PlotImgStack(Skin_cell, 1, xyImageSize);
-
-PlotImgStack(A32V_cell, 0, xyImageSize);
-PlotImgStack(A32V_cell, 1, xyImageSize);
-%}
 
 %%% APPLY LABELS (for development purposes; labels and axes are removed at
 %%% the end of the script)
