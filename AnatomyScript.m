@@ -69,7 +69,8 @@ if ~exist('loadedImages', 'var')
                 regionData{4} = [0.5 0.8 0.5]; %green
                 regionData{5} = 0.7;
             otherwise
-                disp('Region ', imageFolders{region}, ' not assigned properties.');
+                %disp('Region ', imageFolders{region}, ' not assigned properties.');
+                fprintf('Region %i not assigned properties.\n', imageFolders{region});
                 regionData{4} = [1 1 1];
                 regionData{5} = 0.6;
         end
@@ -116,7 +117,13 @@ if ~exist('loadedImages', 'var')
     
     try
         %Load images into Matlab
-        
+        for region = 1:numRegions
+            [images, figureNums, pivotPixel] = LoadImgStack(strcat(masterImageDir, imageFolders{region}), yShift, xyImageSize(1,2), pivotPixel);
+            masterData{region}{1} = images;
+            masterData{region}{2} = figureNums;
+            masterData{region} = SetBregma(masterData{region}, bregma);
+        end
+            %{
         [A32D_slices, A32D_num, pivotPixel] = LoadImgStack(strcat(masterImageDir, 'A32D\'), yShift, xyImageSize(1,2), pivotPixel);
         A32D_cell{1} = A32D_slices;
         A32D_cell{2} = A32D_num;
@@ -141,6 +148,7 @@ if ~exist('loadedImages', 'var')
         A32V_cell{1} = A32V_slices;
         A32V_cell{2} = A32V_num;
         A32V_cell = SetBregma(A32V_cell, bregma);
+        %}
         
     catch
         cd(mainDir);
@@ -159,11 +167,16 @@ if ~exist('loadedImages', 'var')
     %determine how many extra pixels should be added to extendLength to
     %minimize overlap.
     
+    for region = 1:numRegions
+        masterData{region}{1} = AdjustImgStack(masterData{region}{1}, extendLength);
+    end
+        %{
     A32D_cell{1} = AdjustImgStack(A32D_cell{1}, extendLength);
     A24a_cell{1} = AdjustImgStack(A24a_cell{1}, extendLength);
     A24b_cell{1} = AdjustImgStack(A24b_cell{1}, extendLength);
     Skin_cell{1} = AdjustImgStack(Skin_cell{1}, extendLength);
     A32V_cell{1} = AdjustImgStack(A32V_cell{1}, extendLength);
+        %}
     
     loadedImages = 1; %Indicates that image loading has been completed so
     %the if-loop does not have to be repeated when plotting repeatedly.
@@ -173,6 +186,12 @@ end
 %P&W images store right hemisphere data and assume left hemisphere is
 %identical.
 %Images containing both hemispheres only need to be plotted once.
+
+for region = 1:numRegions
+    PlotImgStack(masterData{region}, 0, xyImageSize);
+    PlotImgStack(masterData{region}, 1, xyImageSize);
+end
+%{
 
 PlotImgStack(A32D_cell, 0, xyImageSize);
 PlotImgStack(A32D_cell, 1, xyImageSize);
@@ -188,7 +207,7 @@ PlotImgStack(Skin_cell, 1, xyImageSize);
 
 PlotImgStack(A32V_cell, 0, xyImageSize);
 PlotImgStack(A32V_cell, 1, xyImageSize);
-
+%}
 
 %%% APPLY LABELS (for development purposes; labels and axes are removed at
 %%% the end of the script)
