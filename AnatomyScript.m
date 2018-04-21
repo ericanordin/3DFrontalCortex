@@ -28,6 +28,7 @@ if ~exist('loadedImages', 'var')
     %masterData
     %loadedImages
     %xyImageSize
+    %numRegions
     
     
     imageFolders = {'Cortex\', 'A24a\', 'A24b\', 'A32D\', 'A32V\'};
